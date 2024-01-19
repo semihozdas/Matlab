@@ -1,0 +1,1248 @@
+
+Task 1
+% course.m dosyasında, Name ve Level özelliklerinin dizeler halinde, Waypoints özelliğinin ikili saklanması gerektiği belirtildi.
+ classdef course
+    properties
+        Name string
+        Level string
+        Waypoints double
+    end
+    methods
+        function c = course(name,lvl,waypts)
+            c.Name = name;
+            c.Level = lvl;
+            c.Waypoints = waypts;
+        end
+        function ok = checkWaypoint(c,id,wayptidx)
+            [~,prevwpidx] = max(id.Timestamps);
+            ok = (wayptidx == (1+prevwpidx));
+        end
+        function disp(c)
+            str = c.Level + " course '" + c.Name + "' with " + ...
+                numel(c.Waypoints) + " waypoints:";
+            disp(str)
+            disp(c.Waypoints)
+        end
+    end
+end
+
+Task 2
+% course.m dosyasında, Name ve Level özelliklerinin skaler olması gerektiğini ve Waypoints özelliğinin bir sütun olarak saklanması gerektiğini belirttim.
+classdef course
+    properties
+        Name (1,1) string
+        Level (1,1) string
+        Waypoints (:,1) double
+    end
+    methods
+        function c = course(name,lvl,waypts)
+            c.Name = name;
+            c.Level = lvl;
+            c.Waypoints = waypts;
+        end
+        function ok = checkWaypoint(c,id,wayptidx)
+            [~,prevwpidx] = max(id.Timestamps);
+            ok = (wayptidx == (1+prevwpidx));
+        end
+        function disp(c)
+            str = c.Level + " course '" + c.Name + "' with " + ...
+                numel(c.Waypoints) + " waypoints:";
+            disp(str)
+            disp(c.Waypoints)
+        end
+    end
+end
+
+Task 3
+% course.m dosyasında, Waypoints'in pozitif tam sayılardan oluşması gerektiğini belirtmek için mustBePositive ve mustBeInteger kullandım.
+classdef course
+    properties
+        Name (1,1) string
+        Level (1,1) string
+        Waypoints (:,1) double {mustBePositive,mustBeInteger}
+    end
+    methods
+        function c = course(name,lvl,waypts)
+            c.Name = name;
+            c.Level = lvl;
+            c.Waypoints = waypts;
+        end
+        function ok = checkWaypoint(c,id,wayptidx)
+            [~,prevwpidx] = max(id.Timestamps);
+            ok = (wayptidx == (1+prevwpidx));
+        end
+        function disp(c)
+            str = c.Level + " course '" + c.Name + "' with " + ...
+                numel(c.Waypoints) + " waypoints:";
+            disp(str)
+            disp(c.Waypoints)
+        end
+    end
+end
+
+Task 4
+% Level'ın  ["White","Yellow","Green","Orange","Red"] biri olması gerektiğini mustBeMember ile belirttim ve bu listeden varsayılan bir değer atadım.
+classdef course
+    properties
+        Name (1,1) string
+        Level (1,1) string {mustBeMember(Level,["White","Yellow","Green","Orange","Red"])} = "White"
+        Waypoints (:,1) double {mustBePositive,mustBeInteger}
+    end
+    methods
+        function c = course(name,lvl,waypts)
+            c.Name = name;
+            c.Level = lvl;
+            c.Waypoints = waypts;
+        end
+        function ok = checkWaypoint(c,id,wayptidx)
+            [~,prevwpidx] = max(id.Timestamps);
+            ok = (wayptidx == (1+prevwpidx));
+        end
+        function disp(c)
+            str = c.Level + " course '" + c.Name + "' with " + ...
+                numel(c.Waypoints) + " waypoints:";
+            disp(str)
+            disp(c.Waypoints)
+        end
+    end
+end
+
+3.3.1
+Task 1
+% course.m dosyasında, course'a bir arguments bloğu ekleyip, Name'in metin olması gerektiğini, 
+% Waypoints'in sayısal bir değer olması gerektiğini belirtmek için mustBeText(metin için) ve mustBeNumeric(sayısal değer için) kullandım.
+classdef course
+    properties
+        Name (1,1) string
+        Level (1,1) string {mustBeMember(Level,["White","Yellow","Green","Orange","Red"])} = "White"
+        Waypoints (:,1) double {mustBePositive, mustBeInteger}
+    end
+    methods
+        function c = course(name,lvl,waypts)
+            arguments
+                name {mustBeText}
+                lvl
+                waypts {mustBeNumeric}
+            end
+            c.Name = name;
+            c.Level = lvl;
+            c.Waypoints = waypts;
+        end
+        function ok = checkWaypoint(c,id,wayptidx)
+             [~,prevwpidx] = max(id.Timestamps);          
+            ok = (wayptidx == (1+prevwpidx));
+        end
+        function disp(c)
+            str = c.Level + " course '" + c.Name + "' with " + ...
+                numel(c.Waypoints) + " waypoints:";
+            disp(str)
+            disp(c.Waypoints')
+        end
+    end
+end
+
+3.3.2
+Task 1
+% idstick.m dosyasında, SerialNumber'ın skaler uint32, Status'un skaler string, Participant'ın skaler string, Timestamps'ın datetimes sütunu olduğunu belirttim. 
+% Sonra giriş doğrulaması için arguments bloğu ekleyip, geçerli bir seri numarası olduğunu anlamak için mustBeNumeric, mustBePositive ve mustBeInteger kullandım.
+classdef idstick
+    properties
+        SerialNumber (1,1) uint32
+        Status (1,1) string
+        Participant (1,1) string
+        Course
+        Timestamps (:,1) datetime
+    end
+    methods
+        function id = idstick(snum)
+            arguments
+                snum {mustBeNumeric, mustBePositive, mustBeInteger}
+            end
+            id.SerialNumber = snum;
+        end
+        function disp(id)
+            str = "ID stick #" + id.SerialNumber;
+            if isempty(id.Participant)
+                str = str + " which is not yet registered";
+                disp(str)
+            else
+                str = str + " is registered to " + id.Participant + " who is ";
+                switch id.Status
+                    case "Ready"
+                        str = str + "ready to run";
+                    case "Running"
+                        str = str + "running";
+                    case "Done"
+                        str = str + "finished with";
+                end
+                disp(str)
+                disp(id.Course)
+            end
+       end
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+        function id = register(id,name,course)
+            id.Participant = name;
+            id.Course = course;
+            id.Timestamps = NaT(size(course.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+        function id = checkWaypoint(id,wayptnum)
+            c = id.Course;
+            [id,ok,n] = updateStatus(id,wayptnum);
+            if ok && (n > 1)
+                ok = checkWaypoint(c,id,n);
+            end
+            id.Timestamps(n) = datetime("now");
+            signal(id,ok)
+        end
+        function [id,ok,idx] = updateStatus(id,wayptnum)
+            wplist = id.Course.Waypoints;
+            idx = find(wayptnum == wplist,1,"first");
+            if (id.Status == "Error") || (id.Status == "Done")
+                ok = false;
+            elseif (id.Status == "Ready")
+                if (idx == 1)
+                    id.Status = "Running";
+                    ok = true;
+                else
+                    ok = false;
+                end
+            else
+                ok = ~isempty(idx);
+                if (idx == numel(wplist))
+                    id.Status = "Done";
+                end
+            end
+        end
+    end
+end
+
+Task 2
+% idstick.m dosyasında, if isempty(id.Participant) kodunu if (id.Participant == "") olarak değiştirip idstick'in disp yöntemini değiştirdim.
+classdef idstick
+    properties
+        SerialNumber (1,1) uint32
+        Status (1,1) string
+        Participant (1,1) string
+        Course
+        Timestamps (:,1) datetime
+    end
+    methods
+        function id = idstick(snum)
+            arguments
+                snum {mustBeNumeric, mustBePositive, mustBeInteger}
+            end
+            id.SerialNumber = snum;
+        end
+        function disp(id)
+            str = "ID stick #" + id.SerialNumber;
+            if (id.Participant == "")
+                str = str + " which is not yet registered";
+                disp(str)
+            else
+                str = str + " is registered to " + id.Participant + " who is ";
+                switch id.Status
+                    case "Ready"
+                        str = str + "ready to run";
+                    case "Running"
+                        str = str + "running";
+                    case "Done"
+                        str = str + "finished with";
+                end
+                disp(str)
+                disp(id.Course)
+            end
+        end
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+        function id = register(id,name,course)
+            id.Participant = name;
+            id.Course = course;
+            id.Timestamps = NaT(size(course.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+        function id = checkWaypoint(id,wayptnum)
+            c = id.Course;
+            [id,ok,n] = updateStatus(id,wayptnum);
+            if ok && (n > 1)
+                ok = checkWaypoint(c,id,n);
+            end
+            id.Timestamps(n) = datetime("now");
+            signal(id,ok)
+        end
+        function [id,ok,idx] = updateStatus(id,wayptnum)
+            wplist = id.Course.Waypoints;
+            idx = find(wayptnum == wplist,1,"first");
+            if (id.Status == "Error") || (id.Status == "Done")
+                ok = false;
+            elseif (id.Status == "Ready")
+                if (idx == 1)
+                    id.Status = "Running";
+                    ok = true;
+                else
+                    ok = false;
+                end
+            else
+                ok = ~isempty(idx);
+                if (idx == numel(wplist))
+                    id.Status = "Done";
+                end
+            end
+        end
+    end
+end
+
+Task 3
+% idstick.m dosyasına, Course özelliğinin course türünde olmasını belirtmek için doğrulama ekledim.
+classdef idstick
+    properties
+        SerialNumber (1,1) uint32
+        Status (1,1) string
+        Participant (1,1) string
+        Course course
+        Timestamps (:,1) datetime
+    end
+    methods
+        function id = idstick(snum)
+            arguments
+                snum {mustBeNumeric, mustBePositive, mustBeInteger}
+            end
+            id.SerialNumber = snum;
+        end
+        function disp(id)
+            % Start building display string
+            str = "ID stick #" + id.SerialNumber;
+            % Add participant info, if applicable
+            if (id.Participant == "")
+                str = str + " which is not yet registered";
+                disp(str)
+            else
+                str = str + " is registered to " + id.Participant + " who is ";
+                % Use status to get the correct wording
+                switch id.Status
+                    case "Ready"
+                        str = str + "ready to run";
+                    case "Running"
+                        str = str + "running";
+                    case "Done"
+                        str = str + "finished with";
+                end
+                disp(str)
+                disp(id.Course)
+            end
+        end     
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+        function id = register(id,name,course)
+            id.Participant = name;
+            id.Course = course;
+            id.Timestamps = NaT(size(course.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+        function id = checkWaypoint(id,wayptnum)
+            c = id.Course;
+            [id,ok,n] = updateStatus(id,wayptnum);
+            if ok && (n > 1)
+                ok = checkWaypoint(c,id,n);
+            end
+            id.Timestamps(n) = datetime("now");
+            signal(id,ok)
+        end
+        function [id,ok,idx] = updateStatus(id,wayptnum)
+            wplist = id.Course.Waypoints;
+            idx = find(wayptnum == wplist,1,"first");
+            if (id.Status == "Error") || (id.Status == "Done")
+                ok = false;
+            elseif (id.Status == "Ready")
+                if (idx == 1)
+                    id.Status = "Running";
+                    ok = true;
+                else
+                    ok = false;
+                end
+            else
+                ok = ~isempty(idx);
+                if (idx == numel(wplist))
+                    id.Status = "Done";
+                end
+            end
+        end
+    end
+end
+
+3.4.1
+Task 1
+% c'nin 2.öğesi olarak, w2'de saklanan waypoints ile  Challenge adında Orange seviyede bir nesne oluşturdum.
+c(2) = course("Challenge","Orange",w2)
+
+3.4.2
+Task 1
+% course.m dosyasında, constructor yöntemindeki atamanın sadece üç giriş verildiğinde kullanıldığından emin olmak için if bloğu ekledim.
+classdef course
+    properties
+        Name (1,1) string
+        Level (1,1) string {mustBeMember(Level,["White","Yellow","Green","Orange","Red"])} = "White"
+        Waypoints (:,1) double {mustBePositive, mustBeInteger}
+    end
+    methods
+        function c = course(name,lvl,waypts)
+            if (nargin == 3)
+                c.Name = name;
+                c.Level = lvl;
+                c.Waypoints = waypts;
+            end
+        end
+        function ok = checkWaypoint(c,id,wayptidx)
+            [~,prevwpidx] = max(id.Timestamps);
+            ok = (wayptidx == (1+prevwpidx));
+        end
+
+%         function disp(c)
+%             str = c.Level + " course '" + c.Name + "' with " + ...
+%                 numel(c.Waypoints) + " waypoints:";
+%             disp(str)
+%             disp(c.Waypoints')
+%         end
+    end
+end
+
+Task 2
+% course.m dosyasında, course constructor yöntemine elseif koşulu ekleyip, "3 giriş sağlamanız gerekir." hatası verdirttim.
+classdef course
+    properties
+        Name (1,1) string
+        Level (1,1) string {mustBeMember(Level,["White","Yellow","Green","Orange","Red"])} = "White"
+        Waypoints (:,1) double {mustBePositive, mustBeInteger}
+    end
+    methods
+        function c = course(name,lvl,waypts)
+            if (nargin == 3)
+                c.Name = name;
+                c.Level = lvl;
+                c.Waypoints = waypts;
+            elseif (nargin > 0)
+                error("You need to provide 3 inputs: name, level and a list of waypoints")
+            end
+        end
+        function ok = checkWaypoint(c,id,wayptidx)
+            [~,prevwpidx] = max(id.Timestamps);
+            ok = (wayptidx == (1+prevwpidx));
+        end
+%         function disp(c)
+%             str = c.Level + " course '" + c.Name + "' with " + ...
+%                 numel(c.Waypoints) + " waypoints:";
+%             disp(str)
+%             disp(c.Waypoints')
+%         end
+    end
+end
+
+3.4.3
+Task 1
+% idstick.m dosyasında, contructor yöntemindeki atamanın sadece 1 girdi girildiğinde çalıştığından emin olmak için if bloğu ekledim.
+classdef idstick
+    properties
+        SerialNumber (1,1) uint32
+        Status (1,1) string
+        Participant (1,1) string
+        Course (1,1) course
+        Timestamps (:,1) datetime
+    end
+    methods
+        function id = idstick(snum)
+            if (nargin > 0)
+            id.SerialNumber = snum;
+            end
+        end
+%         function disp(id)
+%             % Start building display string
+%             str = "ID stick #" + id.SerialNumber;
+%             % Add participant info, if applicable
+%             if (id.Participant == "")
+%                 str = str + " which is not yet registered";
+%                 disp(str)
+%             else
+%                 str = str + " is registered to " + id.Participant + " who is ";
+%                 % Use status to get the correct wording
+%                 switch id.Status
+%                     case "Ready"
+%                         str = str + "ready to run";
+%                     case "Running"
+%                         str = str + "running";
+%                     case "Done"
+%                         str = str + "finished with";
+%                 end
+%                 % Display the string, then display the course details
+%                 disp(str)
+%                 disp(id.Course)
+%             end
+%         end
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+
+        function id = register(id,name,course)
+            id.Participant = name;
+            id.Course = course;
+            id.Timestamps = NaT(size(course.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+        function id = checkWaypoint(id,wayptnum)
+            c = id.Course;
+            [id,ok,n] = updateStatus(id,wayptnum);
+            if ok && (n > 1)
+                ok = checkWaypoint(c,id,n);
+            end
+            id.Timestamps(n) = datetime("now");
+            signal(id,ok)
+        end
+        function [id,ok,idx] = updateStatus(id,wayptnum)
+            wplist = id.Course.Waypoints;
+            idx = find(wayptnum == wplist,1,"first");
+            if (id.Status == "Error") || (id.Status == "Done")
+                ok = false;
+            elseif (id.Status == "Ready")
+                if (idx == 1)
+                    id.Status = "Running";
+                    ok = true;
+                else
+                    ok = false;
+                end
+            else
+                ok = ~isempty(idx);
+                if (idx == numel(wplist))
+                    id.Status = "Done";
+                end
+            end
+        end
+    end
+end
+
+Task 2
+% idstick.m dosyasını, snum dizisinin elemanlarını id yapısının SerialNumber alanına atayan döngü olarak değiştirdim.
+classdef idstick
+    properties
+        SerialNumber (1,1) uint32
+        Status (1,1) string
+        Participant (1,1) string
+        Course (1,1) course
+        Timestamps (:,1) datetime
+    end
+    methods
+        function id = idstick(snum)
+            if (nargin > 0)
+            for k= 1:numel(snum)
+                id(k).SerialNumber = snum(k);
+            end
+            end
+        end
+%         function disp(id)
+%             % Start building display string
+%             str = "ID stick #" + id.SerialNumber;
+%             % Add participant info, if applicable
+%             if (id.Participant == "")
+%                 str = str + " which is not yet registered";
+%                 disp(str)
+%             else
+%                 str = str + " is registered to " + id.Participant + " who is ";
+%                 % Use status to get the correct wording
+%                 switch id.Status
+%                     case "Ready"
+%                         str = str + "ready to run";
+%                     case "Running"
+%                         str = str + "running";
+%                     case "Done"
+%                         str = str + "finished with";
+%                 end
+%                 % Display the string, then display the course details
+%                 disp(str)
+%                 disp(id.Course)
+%             end
+%         end
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+
+        function id = register(id,name,course)
+            id.Participant = name;
+            id.Course = course;
+            id.Timestamps = NaT(size(course.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+        function id = checkWaypoint(id,wayptnum)
+            c = id.Course;
+            [id,ok,n] = updateStatus(id,wayptnum);
+            if ok && (n > 1)
+                ok = checkWaypoint(c,id,n);
+            end
+            id.Timestamps(n) = datetime("now");
+            signal(id,ok)
+        end
+        function [id,ok,idx] = updateStatus(id,wayptnum)
+            wplist = id.Course.Waypoints;
+            idx = find(wayptnum == wplist,1,"first");
+            if (id.Status == "Error") || (id.Status == "Done")
+                ok = false;
+            elseif (id.Status == "Ready")
+                if (idx == 1)
+                    id.Status = "Running";
+                    ok = true;
+                else
+                    ok = false;
+                end
+            else
+                ok = ~isempty(idx);
+                if (idx == numel(wplist))
+                    id.Status = "Done";
+                end
+            end
+        end
+    end
+end
+
+3.5
+Task 1
+% course.m dosyasında, course sınıfının özelliklerini özel değere sahip SetAccess özniteliğine sahip olarak değiştirdim.
+classdef course
+    properties (SetAccess = private)
+        Name (1,1) string
+        Level (1,1) string {mustBeMember(Level,["White","Yellow","Green","Orange","Red"])} = "White"
+        Waypoints (:,1) double {mustBePositive, mustBeInteger}
+    end
+    methods
+        function c = course(name,lvl,waypts)
+            if (nargin == 3)
+                % Inputs given -> check them
+                % Name must be text
+                name = convertCharsToStrings(name);
+                if isstring(name)
+                    c.Name = name;
+                else
+                    error("Name must be text")
+                end
+                % Level (values checked by properties block)
+                c.Level = lvl;
+                % Waypoints must be numeric
+                if isnumeric(waypts)
+                    c.Waypoints = waypts;
+                else
+                    error("Waypoints must be numeric")
+                end
+            elseif (nargin > 0)
+                % Inputs given, but not == 3
+                error("You need to provide 3 inputs: name, level, and a list of waypoints")
+            end
+        end
+        function ok = checkWaypoint(c,id,wayptidx)
+            % Get the index of the previous waypoint found
+            [~,prevwpidx] = max(id.Timestamps);
+            % Current waypoint should be the next one
+            ok = (wayptidx == (1+prevwpidx));
+        end
+        function disp(c)
+            n = numel(c);
+            isarray = (n > 1);
+            % Add info about array (if nonscalar)
+            if isarray
+                disp("Array of "+n+" courses"+newline)
+            end
+            for k = 1:n
+                % Start with element number (if nonscalar)
+                if isarray
+                    str = string(k)+") ";
+                else
+                    str = "";
+                end
+                % Make display string for each element
+                if isempty(c(k).Waypoints)
+                    str = str + "Empty course";
+                    disp(str)
+                else
+                    % Build rest of string with course info
+                    str = str + c(k).Level + " course '" + c(k).Name + ...
+                        "' with " + numel(c(k).Waypoints) + " waypoints:";
+                    disp(str)
+                    disp(c(k).Waypoints')
+                end
+            end
+        end
+    end
+end
+
+Task 2
+% idstick.m dosyasında, idstick özelliklerini SetAccess'e ayarladım.
+classdef idstick
+    properties (SetAccess = private)
+        SerialNumber (1,1) uint32
+        Status (1,1) string
+        Participant (1,1) string
+        Course (1,1) course
+        Timestamps (:,1) datetime
+    end
+
+    methods
+        function id = idstick(snum)
+            if (nargin > 0)
+                % Check attributes of given serial number(s)
+                mustBeNumeric(snum)
+                mustBeInteger(snum)
+                mustBePositive(snum)
+                % Make array of objects
+                for k = 1:numel(snum)
+                    id(k).SerialNumber = snum(k);
+                end
+            end
+        end
+
+        function disp(id)
+            for k = 1:numel(id)
+                % Start building display string
+                str = "ID stick #" + id(k).SerialNumber;
+                % Add participant info, if applicable
+                if (id(k).Participant == "")
+                    str = str + " which is not yet registered";
+                    disp(str)
+                else
+                    str = str + " is registered to " + id(k).Participant + " who is ";
+                    % Use status to get the correct wording
+                    switch id(k).Status
+                        case "Ready"
+                            str = str + "ready to run";
+                        case "Running"
+                            str = str + "running";
+                        case "Done"
+                            str = str + "finished with";
+                    end
+                    % Display the string, then display the course details
+                    disp(str)
+                    disp(id(k).Course)
+                end
+            end
+        end
+
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+
+        function id = register(id,name,c)
+            arguments
+                id (1,1) idstick
+                name (1,1) string
+                c (1,1) course
+            end
+            id.Participant = name;
+            id.Course = c;
+            id.Timestamps = NaT(size(c.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+
+        function id = checkWaypoint(id,wayptnum)
+            arguments
+                id (1,1) idstick
+                wayptnum (1,1) double
+            end
+            % Get the course object
+            c = id.Course;
+            % Check and update ID stick status
+            % Check that this waypoint is on this course
+            [id,ok,n] = updateStatus(id,wayptnum);
+            % If the waypoint is valid, the ID stick status is ok, and the
+            % waypoint is not the start, use the course method to check
+            % this waypoint according to the rules of the course. (If this
+            % waypoint is the start, there's nothing more to check.)
+            if ok && (n > 1)
+                ok = checkWaypoint(c,id,n);
+            end
+            % Update the time stamp of this waypoint
+            id.Timestamps(n) = datetime("now");
+            % Tell the participant what happened
+            signal(id,ok)
+        end
+
+        function [id,ok,idx] = updateStatus(id,wayptnum)
+            % Find the given waypoint in the list for this course
+            wplist = id.Course.Waypoints;
+            idx = find(wayptnum == wplist,1,"first");
+            % What is the current ID Stick status?
+            if (id.Status == "Error") || (id.Status == "Done")
+                % Leave status alone, this check-in is a fail
+                ok = false;
+            elseif (id.Status == "Ready")
+                % Ready to start. Check that this waypoint is the start
+                if (idx == 1)
+                    % Alright, let's go!
+                    id.Status = "Running";
+                    ok = true;
+                else
+                    % Checking in at a later waypoint before starting
+                    ok = false;
+                end
+            else
+                % In progress. Check that this waypoint is on this course
+                ok = ~isempty(idx);
+                % If this waypoint is the end, we're done
+                if (idx == numel(wplist))
+                    id.Status = "Done";
+                end
+            end
+        end
+    end
+end
+
+Task 3
+% idstick.m dosyasında, yeni properties oluşturup SerialNumber özelliklerini taşıdım. SetAccess niteliğini değişmez olarak değiştirdim.
+classdef idstick
+    properties (SetAccess = immutable)
+        SerialNumber (1,1) uint32
+    end
+    properties (SetAccess = private)
+        Status (1,1) string
+        Participant (1,1) string
+        Course (1,1) course
+        Timestamps (:,1) datetime
+    end
+
+    methods
+        function id = idstick(snum)
+            if (nargin > 0)
+                % Check attributes of given serial number(s)
+                mustBeNumeric(snum)
+                mustBeInteger(snum)
+                mustBePositive(snum)
+                % Make array of objects
+                for k = 1:numel(snum)
+                    id(k).SerialNumber = snum(k);
+                end
+            end
+        end
+
+        function disp(id)
+            for k = 1:numel(id)
+                % Start building display string
+                str = "ID stick #" + id(k).SerialNumber;
+                % Add participant info, if applicable
+                if (id(k).Participant == "")
+                    str = str + " which is not yet registered";
+                    disp(str)
+                else
+                    str = str + " is registered to " + id(k).Participant + " who is ";
+                    % Use status to get the correct wording
+                    switch id(k).Status
+                        case "Ready"
+                            str = str + "ready to run";
+                        case "Running"
+                            str = str + "running";
+                        case "Done"
+                            str = str + "finished with";
+                    end
+                    % Display the string, then display the course details
+                    disp(str)
+                    disp(id(k).Course)
+                end
+            end
+        end
+
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+
+        function id = register(id,name,c)
+            arguments
+                id (1,1) idstick
+                name (1,1) string
+                c (1,1) course
+            end
+            id.Participant = name;
+            id.Course = c;
+            id.Timestamps = NaT(size(c.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+
+        function id = checkWaypoint(id,wayptnum)
+            arguments
+                id (1,1) idstick
+                wayptnum (1,1) double
+            end
+            % Get the course object
+            c = id.Course;
+            % Check and update ID stick status
+            % Check that this waypoint is on this course
+            [id,ok,n] = updateStatus(id,wayptnum);
+            % If the waypoint is valid, the ID stick status is ok, and the
+            % waypoint is not the start, use the course method to check
+            % this waypoint according to the rules of the course. (If this
+            % waypoint is the start, there's nothing more to check.)
+            if ok && (n > 1)
+                ok = checkWaypoint(c,id,n);
+            end
+            % Update the time stamp of this waypoint
+            id.Timestamps(n) = datetime("now");
+            % Tell the participant what happened
+            signal(id,ok)
+        end
+
+        function [id,ok,idx] = updateStatus(id,wayptnum)
+            % Find the given waypoint in the list for this course
+            wplist = id.Course.Waypoints;
+            idx = find(wayptnum == wplist,1,"first");
+            % What is the current ID Stick status?
+            if (id.Status == "Error") || (id.Status == "Done")
+                % Leave status alone, this check-in is a fail
+                ok = false;
+            elseif (id.Status == "Ready")
+                % Ready to start. Check that this waypoint is the start
+                if (idx == 1)
+                    % Alright, let's go!
+                    id.Status = "Running";
+                    ok = true;
+                else
+                    % Checking in at a later waypoint before starting
+                    ok = false;
+                end
+            else
+                % In progress. Check that this waypoint is on this course
+                ok = ~isempty(idx);
+                % If this waypoint is the end, we're done
+                if (idx == numel(wplist))
+                    id.Status = "Done";
+                end
+            end
+        end
+    end
+end
+
+Task 4
+% idstick.m dosyasında, Access özniteliği özel ayarlanmış yeni özellikler bloğu oluşturup, Status özelliğini buraya atadım.
+classdef idstick
+    properties (SetAccess = immutable)
+        SerialNumber (1,1) uint32
+    end
+    properties (Access = private)
+        Status (1,1) string
+    end
+    properties (SetAccess = private)
+        Participant (1,1) string
+        Course (1,1) course
+        Timestamps (:,1) datetime
+    end
+
+    methods
+        function id = idstick(snum)
+            if (nargin > 0)
+                % Check attributes of given serial number(s)
+                mustBeNumeric(snum)
+                mustBeInteger(snum)
+                mustBePositive(snum)
+                % Make array of objects
+                for k = 1:numel(snum)
+                    id(k).SerialNumber = snum(k);
+                end
+            end
+        end
+
+        function disp(id)
+            for k = 1:numel(id)
+                % Start building display string
+                str = "ID stick #" + id(k).SerialNumber;
+                % Add participant info, if applicable
+                if (id(k).Participant == "")
+                    str = str + " which is not yet registered";
+                    disp(str)
+                else
+                    str = str + " is registered to " + id(k).Participant + " who is ";
+                    % Use status to get the correct wording
+                    switch id(k).Status
+                        case "Ready"
+                            str = str + "ready to run";
+                        case "Running"
+                            str = str + "running";
+                        case "Done"
+                            str = str + "finished with";
+                    end
+                    % Display the string, then display the course details
+                    disp(str)
+                    disp(id(k).Course)
+                end
+            end
+        end
+
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+
+        function id = register(id,name,c)
+            arguments
+                id (1,1) idstick
+                name (1,1) string
+                c (1,1) course
+            end
+            id.Participant = name;
+            id.Course = c;
+            id.Timestamps = NaT(size(c.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+
+        function id = checkWaypoint(id,wayptnum)
+            arguments
+                id (1,1) idstick
+                wayptnum (1,1) double
+            end
+            % Get the course object
+            c = id.Course;
+            % Check and update ID stick status
+            % Check that this waypoint is on this course
+            [id,ok,n] = updateStatus(id,wayptnum);
+            % If the waypoint is valid, the ID stick status is ok, and the
+            % waypoint is not the start, use the course method to check
+            % this waypoint according to the rules of the course. (If this
+            % waypoint is the start, there's nothing more to check.)
+            if ok && (n > 1)
+                ok = checkWaypoint(c,id,n);
+            end
+            % Update the time stamp of this waypoint
+            id.Timestamps(n) = datetime("now");
+            % Tell the participant what happened
+            signal(id,ok)
+        end
+
+        function [id,ok,idx] = updateStatus(id,wayptnum)
+            % Find the given waypoint in the list for this course
+            wplist = id.Course.Waypoints;
+            idx = find(wayptnum == wplist,1,"first");
+            % What is the current ID Stick status?
+            if (id.Status == "Error") || (id.Status == "Done")
+                % Leave status alone, this check-in is a fail
+                ok = false;
+            elseif (id.Status == "Ready")
+                % Ready to start. Check that this waypoint is the start
+                if (idx == 1)
+                    % Alright, let's go!
+                    id.Status = "Running";
+                    ok = true;
+                else
+                    % Checking in at a later waypoint before starting
+                    ok = false;
+                end
+            else
+                % In progress. Check that this waypoint is on this course
+                ok = ~isempty(idx);
+                % If this waypoint is the end, we're done
+                if (idx == numel(wplist))
+                    id.Status = "Done";
+                end
+            end
+        end
+    end
+end
+
+Task 5 
+% idstick.m dosyasında, Access'i özel ayarlanmış bir method bloğu oluşturup, signal ve updateStatus yöntemlerine atadım.
+classdef idstick
+    properties (SetAccess = immutable)
+        SerialNumber (1,1) uint32
+    end
+    properties (Access = private)
+        Status (1,1) string
+    end
+    properties (SetAccess = private)
+        Participant (1,1) string
+        Course (1,1) course
+        Timestamps (:,1) datetime
+    end
+
+    methods
+        function id = idstick(snum)
+            if (nargin > 0)
+                % Check attributes of given serial number(s)
+                mustBeNumeric(snum)
+                mustBeInteger(snum)
+                mustBePositive(snum)
+                % Make array of objects
+                for k = 1:numel(snum)
+                    id(k).SerialNumber = snum(k);
+                end
+            end
+        end
+
+        function disp(id)
+            for k = 1:numel(id)
+                % Start building display string
+                str = "ID stick #" + id(k).SerialNumber;
+                % Add participant info, if applicable
+                if (id(k).Participant == "")
+                    str = str + " which is not yet registered";
+                    disp(str)
+                else
+                    str = str + " is registered to " + id(k).Participant + " who is ";
+                    % Use status to get the correct wording
+                    switch id(k).Status
+                        case "Ready"
+                            str = str + "ready to run";
+                        case "Running"
+                            str = str + "running";
+                        case "Done"
+                            str = str + "finished with";
+                    end
+                    % Display the string, then display the course details
+                    disp(str)
+                    disp(id(k).Course)
+                end
+            end
+        end
+
+        function id = register(id,name,c)
+            arguments
+                id (1,1) idstick
+                name (1,1) string
+                c (1,1) course
+            end
+            id.Participant = name;
+            id.Course = c;
+            id.Timestamps = NaT(size(c.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+
+        function id = checkWaypoint(id,wayptnum)
+            arguments
+                id (1,1) idstick
+                wayptnum (1,1) double
+            end
+            % Get the course object
+            c = id.Course;
+            % Check and update ID stick status
+            % Check that this waypoint is on this course
+            [id,ok,n] = updateStatus(id,wayptnum);
+            % If the waypoint is valid, the ID stick status is ok, and the
+            % waypoint is not the start, use the course method to check
+            % this waypoint according to the rules of the course. (If this
+            % waypoint is the start, there's nothing more to check.)
+            if ok && (n > 1)
+                ok = checkWaypoint(c,id,n);
+            end
+            % Update the time stamp of this waypoint
+            id.Timestamps(n) = datetime("now");
+            % Tell the participant what happened
+            signal(id,ok)
+        end
+
+    end
+    
+    methods (Access = private)
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+
+        function [id,ok,idx] = updateStatus(id,wayptnum)
+            % Find the given waypoint in the list for this course
+            wplist = id.Course.Waypoints;
+            idx = find(wayptnum == wplist,1,"first");
+            % What is the current ID Stick status?
+            if (id.Status == "Error") || (id.Status == "Done")
+                % Leave status alone, this check-in is a fail
+                ok = false;
+            elseif (id.Status == "Ready")
+                % Ready to start. Check that this waypoint is the start
+                if (idx == 1)
+                    % Alright, let's go!
+                    id.Status = "Running";
+                    ok = true;
+                else
+                    % Checking in at a later waypoint before starting
+                    ok = false;
+                end
+            else
+                % In progress. Check that this waypoint is on this course
+                ok = ~isempty(idx);
+                % If this waypoint is the end, we're done
+                if (idx == numel(wplist))
+                    id.Status = "Done";
+                end
+            end
+        end
+    end
+end
