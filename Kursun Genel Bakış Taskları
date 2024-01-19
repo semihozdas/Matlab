@@ -1,0 +1,44 @@
+% Task 1
+% "Family Fun" adında, zorluk seviyesi "White" olan ve w'de saklanan ara noktalara sahip bir kurs tanımlanıd.
+kurs = course("Family Fun", "White", w);
+
+% Task 2
+% 252525 seri numaralı "id" adı verilen bir ID stick nesnesi oluşturuldu.
+id = idstick(252525);
+
+% Task 3
+% Değişkenlerin boyutlarını ve türlerini görmek için "whos" komutu kullanıldı.
+whos
+
+% Task 4
+% Oluşturduğum kimlik nesnesinin özelliklerinin ve yöntemlerinin adlarını görmek için "properties" ve "methods" fonksiyonları kullanıldı.
+ozellikler = properties(id);
+yontemler = methods(id);
+
+% Task 5
+% ID stick kimliğini kullanarak 'Astrid'i "kurs" değişkeniyle temsil eden "Family Fun" kursuna kaydetmek için "register" fonksiyonu kullanıldı. 
+id = register(id, "Astrid", kurs);
+
+% Task 6
+% "Astrid"in 42 numaralı ilk yol noktasındaki ID stick'ini kontrol etmek için "checkWaypoint" fonksiyonu kullanıldı.
+id = checkWaypoint(id, 42);
+
+% Task 1
+% "Insanity" adı, "Red" zorluk seviyesi ve "w2" vektöründe saklanan yol noktaları ile yeni bir rota nesnesi oluşturmak için "waypoints" fonksiyonu kullanıldıyor burada. Bu yeni rotayı "kurs" değişkeninin ikinci öğesi olarak saklamak için standart indekslemeyi kullandım.
+kurs(2) = course("Insanity", "Red", w2);
+
+% Task 2
+% Seri numaraları [123456, 567890, 000000] olan "id" adı verilen bir ID stick nesneleri dizisi oluşturmak için "idstick" fonksiyonunu kullandım.
+idDizisi = idstick([123456, 567890, 000000]);
+
+% Task 3
+% Dizi kimliğindeki ilk ID stick'i kullanarak "Astrid"i "kurs" değişkeninin ilk öğesiyle temsil edilen "Family Fun" kursuna kaydetmek için "kayit" fonksiyonu kullanıldı burada.
+idDizisi(1) = register(idDizisi(1), "Astrid", kurs(1));
+
+% Task 4
+% "Semih"i "Family Fun" kursuna kaydetmek için "register" fonksiyonunu kullandım, ancak dizi kimliğindeki ikinci ID stick'i kullandım. 
+idDizisi(2) = register(idDizisi(2), "Semih", kurs(1));
+
+% Task 5
+% 25 numaralı geçiş noktasında "Astrid"in ID stick'ini (kimliğin ilk öğesi) kontrol etmek için "checkWaypoint" fonksiyonunu kullanılıyor buada.
+idDizisi(1) = checkWaypoint(idDizisi(1), 25);
