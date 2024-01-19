@@ -1,0 +1,276 @@
+
+Task 1
+% course.m dosyasına course adında bir sınıf tanımlandı
+classdef course
+end
+
+Task 2
+% c adında bir kurs nesnesi oluşturuldu
+c = course
+
+Task 3
+% tanımalanan dosyaya özellikler bloğu eklendi.
+classdef course
+    properties
+        Name
+        Level
+        Waypoints
+    end
+end
+
+Task 4
+% c'nin bir level özelliğine sahip olduğu doğrulandı.
+c = course
+lvl = c.Level
+
+Task 5 
+% c'nin Level özelliğini White dizesine ayarladım.
+c.Level = "White"
+
+Task6
+% c'nin Level özelliği 25 ile değiştirildi
+c.Level = 25
+
+
+
+
+
+
+Task 1
+% idstck.m dosyasında özellikleri olan bir idstick adında sınıf tanımlandı.
+classdef idstick
+    properties
+        SerialNumber
+        Status
+        Participant
+        Course
+        Timestamps
+    end
+end
+
+Task 2
+% id adında ID stick nesnesi oluşturuldu. SerialNumber özelliği 002500 olarak ayarlandı
+id = idstick
+id.SerialNumber = 002500
+
+Task 3 
+% id'nin Course özelliğini c olarak ayarlandı
+id.Course = c
+
+Task 4
+%id'nin Course özelliğindeki course nesnesinin Waypoints özelliğinde saklanan waypoints listesini aldım. Sonucu w adlı bir değişkene kaydettim.
+w = id.Course.Waypoints
+
+
+
+
+Task 1
+% idstick.m dosyasını bir yöntem bloğu ekleyip yöntem bloğuna sinyal adında bir yöntem eklendi
+classdef idstick
+    properties
+        SerialNumber
+        Status
+        Participant
+        Course
+        Timestamps
+    end
+    methods
+        function signal(id,ok)
+            if ok
+                disp("Beep")
+            else
+                disp("Buzz")
+            end
+        end
+    end
+end
+
+Task 2
+% Sinyal yöntemini çağırıp ilk gridiyi de idstick nesnesinden id'yi seçtim ve başarılı bir check-in yanıtını simüle etmek için ikinci giriş olarak true değerini kullandım.
+signal(id,true)
+
+Task 3 
+% idstick.m dosyasında sinyal yöntemini değiştirildi.
+classdef idstick
+    properties
+        SerialNumber
+        Status
+        Participant
+        Course
+        Timestamps
+    end
+    methods
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+    end
+end
+
+2.3.2
+Task 1
+% idstick.m dosyasına , register adı verilen yeni bir method eklendi
+classdef idstick
+    properties
+        SerialNumber
+        Status
+        Participant
+        Course
+        Timestamps
+    end
+    methods
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+        function id= register(id,name,course)
+            id.Participant = name;
+            id.Course = course;
+        end
+    end
+end
+
+Task 2
+% Course nesnesinde depolanan course'a Semih adındaki katılımcıyı kaydetmek için register yöntemini çağırarak sonrasında da sonucu idout adında yeni ID stick nesnesine atadım.
+idout = register(id,"Semih",c)
+
+Task 3 
+% Önce id'nin Participant özelliğinin değerini a1 adlı bir değişkene atandı. Sonra idout'un Participant özelliğinin değerini p2 adlı bir değişkene atamış oldum.
+a1 = id.Participant
+a2 = idout.Participant
+
+Task 4 
+% idstick.m dosyasında register yöntemi kullanıldı. Participant ve Course özelliklerini ayarlanıp Status özelliğini Ready olarak ayarladım. Son olarak sinyal yöntemi de çağırıldı.
+classdef idstick
+    properties
+        SerialNumber
+        Status
+        Participant
+        Course
+        Timestamps
+    end
+    methods
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Done")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+        function id= register(id,name,course)
+            id.Participant = name;
+            id.Course = course;
+            id.Status = "Ready";
+            signal(id,true)
+        end
+    end
+end
+
+
+
+
+
+Task 1 
+% idstick.m dosyasına, dosya'yı alan constructor yöntemi ekledim. Constructor da ID stick'in SerialNumber özelliğinin değerini dosya'ya eşit olarak ayarladnıdı.
+classdef idstick
+    properties
+        SerialNumber
+        Status
+        Participant
+        Course
+        Timestamps
+    end
+    methods
+        function id= idstick(dosya)
+            id.SerialNumber = dosya;
+        end
+        function signal(id,ok)
+            if ok
+                if (id.Status == "Ready") || (id.Status == "Tamam")
+                    disp("Beep beep")
+                else
+                    disp("Beep")
+                end
+            else
+                disp("Buzz")
+            end
+        end
+        function id = register(id,name,course)
+            id.Participant = name;
+            id.Course = course;
+            id.Timestamps = NaT(size(course.Waypoints));
+            id.Status = "Ready";
+            signal(id,true)
+        end
+    end
+end
+
+Task 2
+% 252525 seri numaralı id adında bir idstick nesnesi oluşturuldu.
+id = idstick(252525)
+
+Task 3
+% course.m dosyasına bir methods bloğu, üç girdi alan ve sırayla Name, Level, Waypoints özelliklerine atayan bir yöntem eklendi.
+classdef course
+    properties
+        Name
+        Level
+        Waypoints
+    end
+    methods
+        function c = course (name,lvl,waypts)
+            c.Name = name;
+            c.Level  = lvl;
+            c.Waypoints = waypts;
+        end
+    end
+end
+
+Task 4
+% Family Fun adında White düzeyinde ve w'de saklanan ara noktalarla c adında bir course nesnesi oluşturdum.
+c = course("Family Fun","White",w);
+
+2.5
+Task 1
+% course.m dosyasına rota bilgilerini level course 'name' ile numwaypoints ile birlikte görüntüleyen bir disp yöntemi ekledim.
+classdef course
+    properties
+        Name
+        Level
+        Waypoints
+    end
+    methods
+        function c = course(name,lvl,waypts)
+            c.Name = name;
+            c.Level = lvl;
+            c.Waypoints = waypts;
+        end
+        function ok = checkWaypoint(c,id,wayptidx)
+            [~,prevwpidx] = max(id.Timestamps);
+            ok = (wayptidx == (1+prevwpidx));
+        end
+        function disp(c)
+            str = c.Level + " course '" + c.Name + "' with " + ...
+                numel(c.Waypoints) + " waypoints";
+            disp(str)
+        end
+    end
+end
